@@ -1,0 +1,4 @@
+include ':app', ':broker', ':netty_parser', ':parser_commons'
+project(':broker').projectDir = new File(settingsDir, '/broker/')
+project(':netty_parser').projectDir = new File(settingsDir, '/netty_parser/')
+project(':parser_commons').projectDir = new File(settingsDir, '/parser_commons/')
