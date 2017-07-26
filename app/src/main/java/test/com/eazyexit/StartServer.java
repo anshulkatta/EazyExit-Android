@@ -15,15 +15,20 @@ import java.util.Properties;
  */
 
 
-public class StartServer extends AsyncTask{
+public class StartServer implements Runnable{
 
-	@Override
-	protected Object doInBackground(Object[] params) {
-		boolean flag = serverStart();
-		return flag;
+	public static boolean getServerStatus() {
+		return serverStatus;
 	}
 
-	private  boolean serverStart() {
+	private static boolean serverStatus = false;
+
+    @Override
+    public void run() {
+        serverStatus = serverStart();
+    }
+
+    private  boolean serverStart() {
 	try {
 		ServerInstance.getServerInstance().startServer();
 	}

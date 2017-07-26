@@ -8,12 +8,11 @@ import android.os.AsyncTask;
  * Stop MQTT Server
  */
 
-public class StopServer extends AsyncTask {
+public class StopServer implements Runnable {
 
     @Override
-    protected Object doInBackground(Object[] params) {
-        boolean flag = stopServer();
-        return flag;
+    public void run() {
+        stopServer();
     }
 
     private boolean stopServer() {

@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
             Intent i= new Intent(this, EazyExitService.class);
             // potentially add data to the intent
             i.putExtra("server", "started");
-            this.startService(i);
+            startService(i);
         }
     }
 
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent i= new Intent(this, EazyExitService.class);
                 // potentially add data to the intent
                 i.putExtra("server", "started");
-                this.startService(i);
+                startService(i);
             }
         }
     }
