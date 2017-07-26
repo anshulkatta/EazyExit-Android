@@ -14,23 +14,21 @@ public class EazyExitService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
-    AsyncTask task = new StartServer().execute();
-      try {
-          isServerrunning = (boolean) task.get();
-      } catch (InterruptedException e) {
-          e.printStackTrace();
-      } catch (ExecutionException e) {
-          e.printStackTrace();
-      }
+      android.os.Debug.waitForDebugger();
+      Thread t= new Thread(new StartServer());
+      t.start();
+    isServerrunning = StartServer.getServerStatus();
+
   }
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-      if(!isServerrunning) {
-          AsyncTask task = new StartServer().execute();
+      if(isServerrunning) {
+          Thread t = new Thread(new StartServer());
+          t.start();
       }
 
-      return Service.START_STICKY;
+      return Service.START_NOT_STICKY;
   }
 
   @Override
@@ -42,7 +40,9 @@ public class EazyExitService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        AsyncTask task = new StopServer().execute();
+        Thread t = new Thread(new StopServer());
+        t.start();
+        isServerrunning = false;
 
     }
 }
