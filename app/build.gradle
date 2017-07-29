@@ -28,6 +28,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile files('libs/moquette-broker-1.0.jar')
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
+
 
     /*repositories {
         jcenter() {
