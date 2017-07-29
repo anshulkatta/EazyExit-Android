@@ -3,10 +3,23 @@ package test.com.eazyexit;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiManager;
+import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import android.text.format.Formatter;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.MQTTConnector;
+
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +42,36 @@ public class MainActivity extends AppCompatActivity {
             // potentially add data to the intent
             i.putExtra("server", "started");
             startService(i);
+        }
+
+        Button b1 = (Button)findViewById(R.id.b1);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NodePing n = new NodePing();
+                n.ping("ON",getBrokerURL());
+            }
+        });
+
+        Button b2 = (Button)findViewById(R.id.b2);
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AsyncTask m = new AsyncMqttTask();
+                m.execute();
+
+            }
+        });
+
+    }
+
+    class AsyncMqttTask extends AsyncTask {
+        @Override
+        protected Object doInBackground(Object[] params) {
+            MQTTConnector mqttConnector = new MQTTConnector();
+            mqttConnector.connect(getApplicationContext(),getBrokerURL(),"discoverReceive");
+           return null;
         }
     }
 
@@ -65,8 +108,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    private String getBrokerURL() {
+        WifiManager wm = (WifiManager) getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        return "tcp://"+ip+":1883";
     }
 }
