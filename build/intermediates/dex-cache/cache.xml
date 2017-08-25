@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="D:\Projects\Github\EazyExit\EazyExit-Android\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="4f54def40bcac546ebb0df518da03dca03addea7">
+        <dex dex="D:\Projects\Github\EazyExit\EazyExit-Android\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_ed7e711f7f113b7b661e742badad1fbd59a15045\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Projects\Github\EazyExit\EazyExit-Android\app\libs\moquette-broker-1.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="374abfee219367359b3ff0ae00e053ac8d406683">
+        <dex dex="D:\Projects\Github\EazyExit\EazyExit-Android\app\build\intermediates\transforms\dex\debug\folders\1000\2\moquette-broker-1.0_3bd112a0d27fa9945f20f355fd71a79310fe000b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\Projects\Github\EazyExit\EazyExit-Android\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.2"
+        sha1="caff8e51a24901cfc9cd7e1cf83d84f4cb0c103b">
+        <dex dex="D:\Projects\Github\EazyExit\EazyExit-Android\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a6734e96deb3b8fc06205978f86086f2c633208e\classes.dex" />
+    </item>
+
+</items>

@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#03a9f4</color>
+    <color name="colorPrimaryLight">#e2f6ff</color>
+    <color name="colorPrimaryDark">#007ac1</color>
+    <color name="colorAccent">#65ba69</color>
+    <color name="colorAccentLight">#97ed98</color>
+    <color name="colorAccentDark">#32893d</color>
+    <color name="colorNavigationBar">#007ac1</color>
+    <color name="colorExitSnackbar">#616161</color>
+    <color name="colorGrayBackground">#f5f5f5</color>
+    <color name="colorWhiteBackground">#ffffff</color>
+    <color name="colorOn">#ffeb3b</color>
+    <color name="colorOff">#1565c0</color>
+    <color name="fabEdit">#ff6f00</color>
+    <color name="colorCancel">#E53935</color>
+    <color name="fabAdd">#00bfa5</color>
+    <color name="fabDelete">#3e2723</color>
+    <color name="colorTextPrimary">#000000</color>
+    <color name="colorTextSecondary">#ffffff</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

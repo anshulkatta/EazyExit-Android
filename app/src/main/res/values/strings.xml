@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">EazyExit</string>
+    <string name="app_name">Eazy Exit</string>
+    <string name="activity_all_nodes">All nodes</string>
+    <string name="activity_new_node">Add a node</string>
+    <string name="activity_login">Sign In</string>
+    <string name="activity_node_detail">Details</string>
+    <string name="transition_an_to_an">transition_an_to_an</string>
+
+    <string name="title_activity_main">MainActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_add_activtiy">AddActivtiy</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
