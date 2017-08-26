@@ -18,5 +18,3 @@ TOPIC for Sending Message - discoverReceive
 Message - IP and status
 
 NOTE: -  Reverse of the above topics as receiving at node side will be reverse of at the android , same for sending topic
-
-
