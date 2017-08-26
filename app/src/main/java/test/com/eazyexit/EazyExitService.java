@@ -29,8 +29,8 @@ public class EazyExitService extends Service {
 
       Notification notification = new NotificationCompat.Builder(this)
               .setSmallIcon(R.mipmap.ic_launcher)
-              .setContentTitle("My Awesome App")
-              .setContentText("Doing some work...")
+              .setContentTitle("MqttService")
+              .setContentText("MqttServer Started...")
               .setContentIntent(pendingIntent).build();
 
       startForeground(1337, notification);

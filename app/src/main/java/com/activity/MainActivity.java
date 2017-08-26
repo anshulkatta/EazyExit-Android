@@ -1,8 +1,12 @@
 package com.activity;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -16,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.fragment.MasterSwitchFragment;
 import com.fragment.NewSwitchFragment;
@@ -24,6 +29,7 @@ import com.provider.EazyExitContract;
 
 import java.util.ArrayList;
 
+import test.com.eazyexit.EazyExitService;
 import test.com.eazyexit.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         | View.SYSTEM_UI_FLAG_FULLSCREEN
                         | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         setContentView(R.layout.activity_main);
+        initializeMqttService();
 
 
         // Create the adapter that will return a fragment for each of the three
@@ -191,6 +198,54 @@ public class MainActivity extends AppCompatActivity {
         public int getCount() {
             // Show 3 total pages.
             return 3;
+        }
+    }
+
+    /*
+    Start the Background MqttService
+     */
+    private void initializeMqttService() {
+
+        if(!checkPermission()) {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    2);
+        } else {
+            startServiceIntent();
+        }
+    }
+
+    private void startServiceIntent() {
+        Intent serviceIntent= new Intent(this, EazyExitService.class);
+        serviceIntent.putExtra("server", "started");
+        startService(serviceIntent);
+    }
+
+    private boolean checkPermission() {
+        int permissionCheckFlag = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(permissionCheckFlag !=  PackageManager.PERMISSION_GRANTED) {
+            return false;
+        } else
+            return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        boolean writePermission= false;
+        switch (requestCode) {
+            case 2: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    writePermission = true;
+                } else {
+                    Toast.makeText(MainActivity.this, "Permission denied to read your External storage",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            if(writePermission) {
+                startServiceIntent();
+            }
         }
     }
 }
