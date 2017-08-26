@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt" >
+    <aapt:attr name="android:drawable">
+        <vector xmlns:android="http://schemas.android.com/apk/res/android"
+            android:width="100dp"
+            android:height="100dp"
+            android:viewportWidth="100.0"
+            android:viewportHeight="100.0">
+            <path
+                android:name="outerCircle"
+                android:pathData="M50,50m-35,0a35,35 0,1 1,70 0a35,35 0,1 1,-70 0"
+                android:strokeLineCap="round"
+                android:fillAlpha="1"
+                android:strokeColor="#424242"
+                android:fillColor="#00000000"
+                android:strokeWidth="5"
+                android:strokeLineJoin="round"
+                android:strokeAlpha="1"
+                android:trimPathStart="@dimen/on_outerCircle_trim_start"
+                android:trimPathEnd="@dimen/on_outerCircle_trim_end"/>
+            <path
+                android:name="line"
+                android:pathData="M50,0V70"
+                android:strokeLineCap="round"
+                android:strokeColor="#424242"
+                android:fillColor="#00000000"
+                android:strokeWidth="5"
+                android:strokeLineJoin="round"
+                android:strokeAlpha="1"
+                android:trimPathStart="@dimen/on_line_trim_start"
+                android:trimPathEnd="@dimen/on_line_trim_end"/>
+        </vector>
+
+    </aapt:attr>
+
+    <target android:name="line">
+        <aapt:attr name="android:animation">
+            <set android:ordering="together">
+                <objectAnimator
+                    android:propertyName="trimPathStart"
+                    android:valueFrom="@dimen/on_line_trim_start"
+                    android:valueTo="@dimen/off_line_trim_start"
+                    android:valueType="floatType"
+                    android:duration="300"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="@dimen/on_line_trim_end"
+                    android:valueTo="@dimen/off_line_trim_end"
+                    android:valueType="floatType"
+                    android:duration="300"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+        </aapt:attr>
+    </target>
+
+
+    <target android:name="outerCircle">
+        <aapt:attr name="android:animation">
+            <set android:ordering="together">
+                <objectAnimator
+                    android:propertyName="trimPathStart"
+                    android:valueFrom="@dimen/on_outerCircle_trim_start"
+                    android:valueTo="@dimen/off_outerCircle_trim_start"
+                    android:valueType="floatType"
+                    android:duration="300"
+                    android:interpolator="@android:interpolator/fast_out_slow_in" />
+                <objectAnimator
+                    android:propertyName="trimPathEnd"
+                    android:valueFrom="@dimen/on_outerCircle_trim_end"
+                    android:valueTo="@dimen/off_outerCircle_trim_end"
+                    android:valueType="floatType"
+                    android:duration="300"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
+
+        </aapt:attr>
+    </target>
+</animated-vector>
