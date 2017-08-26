@@ -1,0 +1,34 @@
+package com.util;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
+
+import com.provider.EazyExitContract;
+
+/**
+ * Created by Anshul on 26-08-2017.
+ */
+
+public class Util {
+
+    public static String getBrokerURL(Context ctx) {
+        WifiManager wm = (WifiManager) ctx.getSystemService(ctx.WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+        return "tcp://"+ip+":1883";
+    }
+
+    public static ContentValues createContentValue(String name,String Ssid,String state,String level,
+                                                   String location,String type) {
+        ContentValues values = new ContentValues();
+
+        values.put(EazyExitContract.NodeEntry.COLUMN_NAME, name);
+        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, Ssid);
+        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, state);
+        values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, level);
+        values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, location);
+        values.put(EazyExitContract.NodeEntry.COLUMN_TYPE, type);
+        return values;
+    }
+}
