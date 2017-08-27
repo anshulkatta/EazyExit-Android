@@ -1,4 +1,4 @@
-package com;
+package com.mqtt;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -20,9 +20,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MQTTConnector {
 
     private Context context;
-    String subscriptionTopic = "discoverReceive";
 
-    public void connect (Context mContext, String broker,String clientid) {
+    public MqttAndroidClient connect (Context mContext, String broker, String clientid, final String subscriptionTopic) {
         context = mContext;
         final MqttAndroidClient   mqttClient = new MqttAndroidClient(mContext, broker, clientid);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
@@ -40,7 +39,7 @@ public class MQTTConnector {
                     disconnectedBufferOptions.setPersistBuffer(false);
                     disconnectedBufferOptions.setDeleteOldestMessages(false);
                     mqttClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic(mqttClient);
+                    subscribeToTopic(mqttClient,subscriptionTopic);
                 }
 
                 @Override
@@ -53,10 +52,11 @@ public class MQTTConnector {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return mqttClient;
 
     }
 
-    public void subscribeToTopic(MqttAndroidClient mqttClient){
+    public void subscribeToTopic(MqttAndroidClient mqttClient,String subscriptionTopic){
         try {
             mqttClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
                 @Override
@@ -71,10 +71,9 @@ public class MQTTConnector {
             mqttClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    // message Arrived!
-                    if(message != null) {
+                    if(topic.equals(Util.DISCOVERY_TOPIC) && message != null) {
                         String messageArr[] = message.toString().split(":");
-                        if(messageArr !=null && messageArr.length >1) {
+                        if(messageArr !=null && messageArr.length >0) {
                             ContentValues value = Util.createContentValue("New Node",messageArr[0],
                                     "ON","PRIMARY","NEW","No Name Yet");
                             context.getContentResolver().insert

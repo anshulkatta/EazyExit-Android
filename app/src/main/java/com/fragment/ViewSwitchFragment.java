@@ -77,7 +77,7 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new ViewSwitchAdapter(getContext(), new ArrayList<Node>());
         recyclerView.setAdapter(adapter);
-
+        adapter.initDummy();
         callbacks = this;
 
         LoaderManager manager = getLoaderManager();

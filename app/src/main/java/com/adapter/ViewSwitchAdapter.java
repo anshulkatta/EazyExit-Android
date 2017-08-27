@@ -2,6 +2,7 @@ package com.adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,12 +10,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mqtt.AckMqttListener;
+import com.mqtt.MQTTConnector;
 import com.model.Node;
 import com.provider.EazyExitContract;
+import com.util.Util;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 
 import java.util.ArrayList;
 
+import test.com.eazyexit.NodePing;
 import test.com.eazyexit.R;
 
 /**
@@ -83,17 +94,17 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
     }
 
     private void toOn(int position){
-        ContentValues values = new ContentValues();
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "ON");
-        context.getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI,values,
-                EazyExitContract.NodeEntry.COLUMN_SSID + "= ?", new String[]{dataSet.get(position).getSsid()});
+        AsyncTask m = new AsyncAcknowledgeTask();
+        m.execute(position);
+        NodePing n = new NodePing();
+        n.ping(dataSet.get(position).getSsid()+":ON", Util.getBrokerURL(context));
     }
 
     private void toOff(int position){
-        ContentValues values = new ContentValues();
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "OFF");
-        context.getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI,values,
-                EazyExitContract.NodeEntry.COLUMN_SSID + "= ?", new String[]{dataSet.get(position).getSsid()});
+        AsyncTask m = new AsyncAcknowledgeTask();
+        m.execute(position);
+        NodePing n = new NodePing();
+        n.ping(dataSet.get(position).getSsid()+":OFF", Util.getBrokerURL(context));
     }
 
     public void swapData(ArrayList<Node> dataSet){
@@ -102,5 +113,67 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
         this.dataSet.clear();
         this.dataSet.addAll(dataSet);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    class AsyncAcknowledgeTask extends AsyncTask {
+
+        AckMqttListener listener = null;
+        int position;
+        MqttAndroidClient ackClient = null;
+        boolean subSuccess = false;
+
+        @Override
+        protected Object doInBackground(Object[] params) {
+            position = (int)params[0];
+            try {
+                listener = new AckMqttListener(ViewSwitchAdapter.this,position);
+                ackClient = createClient(context,Util.getBrokerURL(context),"ackClient");
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        private MqttAndroidClient createClient(Context ctx,String broker, String clientId) throws Exception{
+            MqttAndroidClient   mqttClient = new MqttAndroidClient(ctx, broker, clientId);
+            MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
+            mqttConnectOptions.setAutomaticReconnect(true);
+            mqttConnectOptions.setCleanSession(false);
+            mqttClient.connect(mqttConnectOptions,null,new IMqttActionListener(){
+                @Override
+                public void onSuccess(IMqttToken asyncActionToken) {
+                    try {
+                        ackClient.subscribe(Util.ON_OFF_ACK_TOPIC, 0, listener);
+                        subSuccess = true;
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                @Override
+                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                }
+            });
+            return mqttClient;
+        }
+    }
+    public void updateStatus(int position,String status) {
+        ContentValues values = null;
+        if(status != null && !status.isEmpty()) {
+            values = new ContentValues();
+            if(status.contains("OFF")) {
+                values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "OFF");
+            } else if(status.contains("ON")) {
+                values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "ON");
+            }
+        }
+        if(values!=null) {
+            context.getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values,
+                    EazyExitContract.NodeEntry.COLUMN_SSID + "= ?", new String[]{dataSet.get(position).getSsid()});
+        }
+    }
+    public void initDummy() {
+        AsyncTask m = new AsyncAcknowledgeTask();
+        m.execute(0);
     }
 }

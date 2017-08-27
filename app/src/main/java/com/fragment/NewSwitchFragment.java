@@ -1,6 +1,5 @@
 package com.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,14 +9,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.MQTTConnector;
-import com.activity.MainActivity;
-import com.provider.EazyExitContract;
+import com.mqtt.MQTTConnector;
+
 import com.util.Util;
 
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
 
 import test.com.eazyexit.NodePing;
 import test.com.eazyexit.R;
@@ -27,6 +26,8 @@ import test.com.eazyexit.R;
  */
 
 public class NewSwitchFragment extends Fragment{
+
+    MqttAndroidClient discoveryclient = null;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +63,9 @@ public class NewSwitchFragment extends Fragment{
         @Override
         protected Object doInBackground(Object[] params) {
             mqttConnector = new MQTTConnector();
-            mqttConnector.connect(getContext(), Util.getBrokerURL(getContext()), "discoverReceive");
+            MqttAndroidClient mqttAndroidClient = mqttConnector.connect(getContext(),
+                    Util.getBrokerURL(getContext()), "discoverReceive",Util.DISCOVERY_TOPIC);
+            discoveryclient = mqttAndroidClient;
             NodePing n = new NodePing();
             n.ping("IDENTIFY",Util.getBrokerURL(getContext()));
             return null;
@@ -73,5 +76,14 @@ public class NewSwitchFragment extends Fragment{
             super.onPostExecute(o);
             Toast.makeText(getContext(),"Discovery is in progress",Toast.LENGTH_SHORT);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        if(discoveryclient != null) {
+            discoveryclient.unregisterResources();
+            discoveryclient.close();
+        }
+        super.onDestroy();
     }
 }

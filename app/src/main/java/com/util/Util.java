@@ -13,6 +13,9 @@ import com.provider.EazyExitContract;
 
 public class Util {
 
+    public static String DISCOVERY_TOPIC = "discoverReceive";
+    public static String ON_OFF_ACK_TOPIC = "EazyExit/ACK";
+
     public static String getBrokerURL(Context ctx) {
         WifiManager wm = (WifiManager) ctx.getSystemService(ctx.WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
