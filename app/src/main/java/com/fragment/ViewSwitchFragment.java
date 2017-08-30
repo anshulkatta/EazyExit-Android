@@ -58,6 +58,7 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
                 EazyExitContract.NodeEntry.COLUMN_LOCATION,
                 EazyExitContract.NodeEntry.COLUMN_TYPE
         };
+        adapter = new ViewSwitchAdapter(getContext(), new ArrayList<Node>());
         update = new Update();
         reload = new Reload();
     }
@@ -75,7 +76,6 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
         content = (CoordinatorLayout) view.findViewById(R.id.content_view);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new ViewSwitchAdapter(getContext(), new ArrayList<Node>());
         recyclerView.setAdapter(adapter);
 
         callbacks = this;
