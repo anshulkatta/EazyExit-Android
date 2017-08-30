@@ -1,11 +1,13 @@
 package com.fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +15,13 @@ import android.widget.Toast;
 
 import com.mqtt.MQTTConnector;
 
+import com.provider.EazyExitContract;
 import com.util.Util;
 
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttMessageListener;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import test.com.eazyexit.NodePing;
 import test.com.eazyexit.R;
@@ -25,7 +30,7 @@ import test.com.eazyexit.R;
  * Created by Akshay on 14-08-2017.
  */
 
-public class NewSwitchFragment extends Fragment{
+public class NewSwitchFragment extends Fragment implements IMqttMessageListener {
 
     MqttAndroidClient discoveryclient = null;
     @Override
@@ -42,11 +47,8 @@ public class NewSwitchFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 AsyncTask m = new AsyncDiscoveryTask(getContext());
                 m.execute();
-
-
             }
         });
         return view;
@@ -62,10 +64,11 @@ public class NewSwitchFragment extends Fragment{
         }
         @Override
         protected Object doInBackground(Object[] params) {
-            mqttConnector = new MQTTConnector();
-            MqttAndroidClient mqttAndroidClient = mqttConnector.connect(getContext(),
-                    Util.getBrokerURL(getContext()), "discoverReceive",Util.DISCOVERY_TOPIC);
-            discoveryclient = mqttAndroidClient;
+            if(discoveryclient == null) {
+                MQTTConnector  connector = new MQTTConnector(NewSwitchFragment.this);
+                discoveryclient = connector.getClient(getContext(),Util.getBrokerURL(getContext()),"receiveClient");
+                connector.connect(discoveryclient,Util.DISCOVERY_TOPIC);
+            }
             NodePing n = new NodePing();
             n.ping("IDENTIFY",Util.getBrokerURL(getContext()));
             return null;
@@ -85,5 +88,22 @@ public class NewSwitchFragment extends Fragment{
             discoveryclient.close();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void messageArrived(String topic, MqttMessage message) throws Exception {
+        if(topic.equals(Util.DISCOVERY_TOPIC) && message != null) {
+            String messageArr[] = message.toString().split(":");
+            if(messageArr !=null && messageArr.length >0) {
+                ContentValues value = Util.createContentValue("New Node",messageArr[0],
+                        "ON","PRIMARY","NEW","No Name Yet");
+                getContext().getContentResolver().insert
+                        (EazyExitContract.NodeEntry.CONTENT_URI, value);
+                value.clear();
+
+            }
+
+            Log.d("MQTTConnector","Message: " + topic + " : " + new String(message.getPayload()));
+        }
     }
 }

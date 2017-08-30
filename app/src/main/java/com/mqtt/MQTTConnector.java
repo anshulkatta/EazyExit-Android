@@ -1,9 +1,11 @@
 package com.mqtt;
 
+import android.app.Fragment;
 import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
+import com.fragment.NewSwitchFragment;
 import com.provider.EazyExitContract;
 import com.util.Util;
 
@@ -20,43 +22,59 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class MQTTConnector {
 
     private Context context;
+    IMqttMessageListener listener;
 
-    public MqttAndroidClient connect (Context mContext, String broker, String clientid, final String subscriptionTopic) {
+    public MQTTConnector(IMqttMessageListener listener) {
+        this.listener = listener;
+    }
+
+    public MqttAndroidClient getClient(Context mContext, String broker, String clientid) {
         context = mContext;
-        final MqttAndroidClient   mqttClient = new MqttAndroidClient(mContext, broker, clientid);
+        MqttAndroidClient   mqttClient = new MqttAndroidClient(mContext, broker, clientid);
         MqttConnectOptions mqttConnectOptions = new MqttConnectOptions();
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(false);
         mqttClient.setCallback(new MqttCallbackHandler());
+        return mqttClient;
+    }
+
+    public void connect(MqttAndroidClient mqttClient,String subscriptionTopic) {
         try {
-
-            mqttClient.connect(mqttConnectOptions,null,new IMqttActionListener() {
-                @Override
-                public void onSuccess(IMqttToken asyncActionToken) {
-                    DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
-                    disconnectedBufferOptions.setBufferEnabled(true);
-                    disconnectedBufferOptions.setBufferSize(100);
-                    disconnectedBufferOptions.setPersistBuffer(false);
-                    disconnectedBufferOptions.setDeleteOldestMessages(false);
-                    mqttClient.setBufferOpts(disconnectedBufferOptions);
-                    subscribeToTopic(mqttClient,subscriptionTopic);
-                }
-
-                @Override
-                public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
-                    exception.printStackTrace();
-                }
-            });
-
-
+            mqttClient.connect(null,new Listener(mqttClient,subscriptionTopic));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return mqttClient;
+    }
+
+    private DisconnectedBufferOptions getDisconnectedbufferoptions() {
+        DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
+        disconnectedBufferOptions.setBufferEnabled(true);
+        disconnectedBufferOptions.setBufferSize(100);
+        disconnectedBufferOptions.setPersistBuffer(false);
+        disconnectedBufferOptions.setDeleteOldestMessages(false);
+        return disconnectedBufferOptions;
+    }
+
+    class Listener implements IMqttActionListener {
+        String subscriptionTopic;
+        MqttAndroidClient mqttClient;
+        Listener(MqttAndroidClient mqttClient,String subscriptionTopic) {
+            this.subscriptionTopic = subscriptionTopic;
+            this.mqttClient = mqttClient;
+        }
+        public void onSuccess(IMqttToken asyncActionToken) {
+            mqttClient.setBufferOpts(getDisconnectedbufferoptions());
+            subscribeToTopic(mqttClient,subscriptionTopic);
+        }
+
+        @Override
+        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+            exception.printStackTrace();
+        }
 
     }
 
-    public void subscribeToTopic(MqttAndroidClient mqttClient,String subscriptionTopic){
+    private void subscribeToTopic(MqttAndroidClient mqttClient,String subscriptionTopic){
         try {
             mqttClient.subscribe(subscriptionTopic, 0, null, new IMqttActionListener() {
                 @Override
@@ -68,7 +86,8 @@ public class MQTTConnector {
                     Log.d("MQTTConnector","Failed to subscribe");
                 }
             });
-            mqttClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
+            mqttClient.subscribe(subscriptionTopic, 0,listener);
+            /*mqttClient.subscribe(subscriptionTopic, 0, new IMqttMessageListener() {
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
                     if(topic.equals(Util.DISCOVERY_TOPIC) && message != null) {
@@ -86,7 +105,7 @@ public class MQTTConnector {
                     }
 
                 }
-            });
+            });*/
 
         } catch (MqttException ex){
             Log.d("MQTTConnector","Exception while subscribing");
