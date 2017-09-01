@@ -23,7 +23,9 @@ import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.provider.EazyExitContract;
+import com.util.Util;
 
+import test.com.eazyexit.NodePing;
 import test.com.eazyexit.R;
 
 /**
@@ -103,24 +105,27 @@ public class MasterSwitchFragment extends Fragment {
     }
 
     private void toggle(){
+        AsyncTask switchAsyncTask = new MasterSwitchAsyncTask();
         TransitionManager.beginDelayedTransition(content);
         if(state){
             if(off.isRunning()){
                 off.stop();
             }
+            switchAsyncTask.execute("ON");
             masterButton.setImageDrawable(on);
             on.start();
             bgHolder.fullScroll(View.FOCUS_DOWN);
         } else {
             if(on.isRunning())
                 on.stop();
+            switchAsyncTask.execute("OFF");
             masterButton.setImageDrawable(off);
             off.start();
             bgHolder.fullScroll(View.FOCUS_UP);
         }
         state = !state;
         //TODO: Logic to update state of all nodes
-        updateNodes();
+        //updateNodes();
 
 
     }
@@ -143,7 +148,16 @@ public class MasterSwitchFragment extends Fragment {
                 mSelectionClause,
                 mSelectionArgs
         );
+    }
 
-
+    class MasterSwitchAsyncTask extends AsyncTask {
+        @Override
+        protected Object doInBackground(Object[] params) {
+            if(params!=null && params.length > 0 && params[0] != null) {
+                NodePing p = new NodePing();
+                p.ping((String)params[0], Util.getBrokerURL(getContext()));
+            }
+            return null;
+        }
     }
 }

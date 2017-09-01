@@ -2,6 +2,7 @@ package com.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -95,14 +96,25 @@ public class NewSwitchFragment extends Fragment implements IMqttMessageListener 
         if(topic.equals(Util.DISCOVERY_TOPIC) && message != null) {
             String messageArr[] = message.toString().split(":");
             if(messageArr !=null && messageArr.length >0) {
-                ContentValues value = Util.createContentValue("New Node",messageArr[0],
+                Cursor cursor = getContext().getContentResolver().query(EazyExitContract.NodeEntry.CONTENT_URI,
+                        new String[]{EazyExitContract.NodeEntry.COLUMN_HASH},
+                        EazyExitContract.NodeEntry.COLUMN_HASH+" =? ",new String[]{messageArr[0]},null);
+                while (cursor!=null && cursor.moveToNext()){
+                    String hash = cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_HASH));
+                    if(hash.equals(messageArr[0])){
+                        ContentValues values = new ContentValues();
+                        values.put(EazyExitContract.NodeEntry.COLUMN_IP, messageArr[1]);
+                        getContext().getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI,
+                                values,EazyExitContract.NodeEntry.COLUMN_HASH + " = ?",new String[]{hash});
+                    }
+                    return;
+                }
+                ContentValues value = Util.createContentValue("New Node",messageArr[0],messageArr[1],
                         "ON","PRIMARY","NEW","No Name Yet");
                 getContext().getContentResolver().insert
                         (EazyExitContract.NodeEntry.CONTENT_URI, value);
                 value.clear();
-
             }
-
             Log.d("MQTTConnector","Message: " + topic + " : " + new String(message.getPayload()));
         }
     }

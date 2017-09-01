@@ -52,7 +52,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
     public void onBindViewHolder(ViewSwitchAdapter.ViewHolder holder, int position) {
         initAckClient();
         holder.location.setText(dataSet.get(position).getLocation());
-        holder.name.setText(dataSet.get(position).getSsid());
+        holder.name.setText(dataSet.get(position).getIp());
         boolean state = dataSet.get(position).getStatus().equals("ON");
         if(state) {
             holder.on.setVisibility(View.VISIBLE);
@@ -83,7 +83,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
         return dataSet.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView name, location;
         Button on, off;
         public ViewHolder(View itemView) {
@@ -93,16 +93,21 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
             on = (Button) itemView.findViewById(R.id.on_view_row);
             off = (Button) itemView.findViewById(R.id.off_view_row);
         }
+
+        @Override
+        public void onClick(View v) {
+
+        }
     }
 
     private void toOn(int position){
         NodePing n = new NodePing();
-        n.ping(dataSet.get(position).getSsid()+":ON", Util.getBrokerURL(context));
+        n.ping(dataSet.get(position).getHash()+":ON", Util.getBrokerURL(context));
     }
 
     private void toOff(int position){
         NodePing n = new NodePing();
-        n.ping(dataSet.get(position).getSsid()+":OFF", Util.getBrokerURL(context));
+        n.ping(dataSet.get(position).getHash()+":OFF", Util.getBrokerURL(context));
     }
 
     public void swapData(ArrayList<Node> dataSet){
@@ -143,7 +148,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
         }
     }
 
-    public void updateStatus(String ssid,String status) {
+    public void updateStatus(String hash,String status) {
         ContentValues values = null;
         if(status != null && !status.isEmpty()) {
             values = new ContentValues();
@@ -155,7 +160,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
         }
         if(values!=null) {
             context.getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values,
-                    EazyExitContract.NodeEntry.COLUMN_SSID + "= ?", new String[]{ssid});
+                    EazyExitContract.NodeEntry.COLUMN_HASH + " =?", new String[]{hash});
         }
     }
 }

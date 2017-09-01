@@ -34,7 +34,7 @@ public class CompareNodeList extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return oldNodes.get(oldItemPosition).getSsid().equals(newNodes.get(newItemPosition).getSsid());
+        return oldNodes.get(oldItemPosition).getHash().equals(newNodes.get(newItemPosition).getHash());
     }
 
     @Override
@@ -50,8 +50,8 @@ public class CompareNodeList extends DiffUtil.Callback {
 
         Bundle payload = new Bundle();
 
-        if(!oldData.getSsid().equals(newData.getSsid()))
-            payload.putString(EazyExitContract.NodeEntry.COLUMN_SSID, newData.getSsid());
+        if(!oldData.getHash().equals(newData.getHash()))
+            payload.putString(EazyExitContract.NodeEntry.COLUMN_HASH, newData.getHash());
         if(!oldData.getName().equals(newData.getName()))
             payload.putString(EazyExitContract.NodeEntry.COLUMN_NAME, newData.getName());
         if(!oldData.getLevel().equals(newData.getLevel()))

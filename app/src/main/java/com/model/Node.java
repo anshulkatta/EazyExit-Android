@@ -5,20 +5,37 @@ package com.model;
  */
 
 public class Node {
-    String name, level, status, location, ssid, type;
+    String name, level, status, location, ip,hash, type;
 
     public Node(){}
-    Node(String name, String level, String status, String location, String ssid, String type){
+    Node(String name, String level, String status, String location, String ip, String type,String hash){
         this.name = name;
         this.level = level;
         this.status = status;
         this.location = location;
-        this.ssid = ssid;
+        this.ip = ip;
+        this.hash = hash;
         this.type = type;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
     public void setName(String name) {
@@ -49,14 +66,6 @@ public class Node {
         this.location = location;
     }
 
-    public String getSsid() {
-        return ssid;
-    }
-
-    public void setSsid(String ssid) {
-        this.ssid = ssid;
-    }
-
     public String getType() {
         return type;
     }
@@ -70,7 +79,7 @@ public class Node {
         if(obj instanceof Node){
             Node node = (Node) obj;
             if(
-                    this.ssid.equals(node.ssid) &&
+                    this.hash.equals(node.hash) &&
                     this.name.equals(node.name) &&
                             this.level.equals(node.level) &&
                             this.status.equals(node.status) &&

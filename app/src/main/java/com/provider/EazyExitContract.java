@@ -28,7 +28,8 @@ public class EazyExitContract {
 
         public static final String TABLE_NAME = "NodeTable";
         public static final String COLUMN_NAME = "nodeName";
-        public static final String COLUMN_SSID = "nodeSSID";
+        public static final String COLUMN_IP= "nodeIp";
+        public static final String COLUMN_HASH = "nodeHash";
         public static final String COLUMN_TYPE = "nodeType";
         public static final String COLUMN_LEVEL = "nodeLevel";
         public static final String COLUMN_STATE = "nodeState";
