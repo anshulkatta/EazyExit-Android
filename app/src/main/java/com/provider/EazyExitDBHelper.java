@@ -27,7 +27,8 @@ public class EazyExitDBHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + EazyExitContract.NodeEntry.TABLE_NAME + " ( " +
                         EazyExitContract.NodeEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                         EazyExitContract.NodeEntry.COLUMN_NAME + " TEXT NOT NULL," +
-                        EazyExitContract.NodeEntry.COLUMN_SSID + " TEXT NOT NULL," +
+                        EazyExitContract.NodeEntry.COLUMN_HASH + " TEXT NOT NULL," +
+                        EazyExitContract.NodeEntry.COLUMN_IP + " TEXT NOT NULL," +
                         EazyExitContract.NodeEntry.COLUMN_STATE + " TEXT NOT NULL," +
                         EazyExitContract.NodeEntry.COLUMN_TYPE + " TEXT NOT NULL," +
                         EazyExitContract.NodeEntry.COLUMN_LEVEL + " TEXT NOT NULL," +

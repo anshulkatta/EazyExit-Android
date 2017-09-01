@@ -22,12 +22,13 @@ public class Util {
         return "tcp://"+ip+":1883";
     }
 
-    public static ContentValues createContentValue(String name,String Ssid,String state,String level,
+    public static ContentValues createContentValue(String name,String hash,String ip,String state,String level,
                                                    String location,String type) {
         ContentValues values = new ContentValues();
 
         values.put(EazyExitContract.NodeEntry.COLUMN_NAME, name);
-        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, Ssid);
+        values.put(EazyExitContract.NodeEntry.COLUMN_IP, ip);
+        values.put(EazyExitContract.NodeEntry.COLUMN_HASH, hash);
         values.put(EazyExitContract.NodeEntry.COLUMN_STATE, state);
         values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, level);
         values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, location);

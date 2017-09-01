@@ -53,14 +53,16 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
                 EazyExitContract.NodeEntry._ID,
                 EazyExitContract.NodeEntry.COLUMN_LEVEL,
                 EazyExitContract.NodeEntry.COLUMN_STATE,
-                EazyExitContract.NodeEntry.COLUMN_SSID,
+                EazyExitContract.NodeEntry.COLUMN_HASH,
+                EazyExitContract.NodeEntry.COLUMN_IP,
                 EazyExitContract.NodeEntry.COLUMN_NAME,
                 EazyExitContract.NodeEntry.COLUMN_LOCATION,
                 EazyExitContract.NodeEntry.COLUMN_TYPE
         };
+        adapter = new ViewSwitchAdapter(getContext(), new ArrayList<Node>());
         update = new Update();
         reload = new Reload();
-        adapter = new ViewSwitchAdapter(getContext(), new ArrayList<Node>());
+
     }
 
     @Nullable
@@ -132,7 +134,8 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
                 node.setName(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_NAME)));
                 node.setLevel(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_LEVEL)));
                 node.setLocation(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_LOCATION)));
-                node.setSsid(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_SSID)));
+                node.setHash(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_HASH)));
+                node.setIp(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_IP)));
                 node.setType(cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_TYPE)));
 
                 dataSet.add(node);
@@ -161,11 +164,11 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
             Cursor cursor = getContext().getContentResolver().query(EazyExitContract.NodeEntry.CONTENT_URI, PROJECTION, null, null, null);
             ContentValues values = new ContentValues();
             String state = "";
-            String ssid = "";
+            String hash = "";
             String nState = "";
             while (cursor.moveToNext()){
                 state = cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_STATE));
-                ssid = cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_SSID));
+                hash = cursor.getString(cursor.getColumnIndex(EazyExitContract.NodeEntry.COLUMN_HASH));
                 break;
             }
             cursor.close();
@@ -175,13 +178,13 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
                 nState = "OFF";
 
             values.put(EazyExitContract.NodeEntry.COLUMN_STATE, nState);
-            getContext().getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values, EazyExitContract.NodeEntry.COLUMN_SSID + " = ?",
-                    new String[]{ssid});
+            getContext().getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values, EazyExitContract.NodeEntry.COLUMN_HASH + " = ?",
+                    new String[]{hash});
 
             values.clear();
             values.put(EazyExitContract.NodeEntry.COLUMN_STATE, state);
-            getContext().getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values, EazyExitContract.NodeEntry.COLUMN_SSID + " = ?",
-                    new String[]{ssid});
+            getContext().getContentResolver().update(EazyExitContract.NodeEntry.CONTENT_URI, values, EazyExitContract.NodeEntry.COLUMN_HASH + " = ?",
+                    new String[]{hash});
             return null;
         }
 
