@@ -5,7 +5,7 @@
     <string name="activity_login">Sign In</string>
     <string name="activity_node_detail">Details</string>
     <string name="transition_an_to_an">transition_an_to_an</string>
-
+    <string name="save">Save</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>

@@ -2,6 +2,7 @@ package com.adapter;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.activity.NodeActivity;
 import com.mqtt.MQTTConnector;
 import com.model.Node;
 import com.provider.EazyExitContract;
@@ -52,7 +54,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
     public void onBindViewHolder(ViewSwitchAdapter.ViewHolder holder, int position) {
         initAckClient();
         holder.location.setText(dataSet.get(position).getLocation());
-        holder.name.setText(dataSet.get(position).getIp());
+        holder.name.setText(dataSet.get(position).getName());
         boolean state = dataSet.get(position).getStatus().equals("ON");
         if(state) {
             holder.on.setVisibility(View.VISIBLE);
@@ -75,6 +77,7 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
                 toOn(pos);
             }
         });
+        holder.hash = dataSet.get(pos).getHash();
 
     }
 
@@ -86,16 +89,21 @@ public class ViewSwitchAdapter extends RecyclerView.Adapter<ViewSwitchAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView name, location;
         Button on, off;
+        String hash;
         public ViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.name_view_row);
             location = (TextView) itemView.findViewById(R.id.location_view_row);
             on = (Button) itemView.findViewById(R.id.on_view_row);
             off = (Button) itemView.findViewById(R.id.off_view_row);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
+            Intent i = new Intent(context, NodeActivity.class);
+            i.putExtra("hash",hash);
+            context.startActivity(i);
 
         }
     }

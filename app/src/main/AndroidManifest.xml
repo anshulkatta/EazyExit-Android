@@ -35,6 +35,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="com.activity.NodeActivity" android:label="NodeActivity"/>
+
         <provider
             android:name="com.provider.EazyExitProvider"
             android:authorities="com.eazyexit.provider"

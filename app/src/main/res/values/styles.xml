@@ -28,4 +28,13 @@
         <item name="titleTextColor">@android:color/white</item>
     </style>
 
+    <style name="AppTheme.PopupOverlay" parent="@android:style/ThemeOverlay.Material.Dark" />
+
+    <style name="ExpandedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">28.5sp</item>
+        <item name="android:textColor">@color/colorTextPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">textStart</item>
+    </style>
+
 </resources>
