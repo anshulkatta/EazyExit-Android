@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.adapter.ViewSwitchAdapter;
 import com.model.Node;
+import com.mqtt.AcknowledgeListener;
 import com.provider.EazyExitContract;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
     Update update;
     LoaderManager.LoaderCallbacks<Cursor> callbacks;
     Reload reload;
+    private static AcknowledgeListener acknowledgeListener;
 
     private static final int VIEW_NODES_LOADER_ID = 0;
 
@@ -68,6 +70,7 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        initAckClient();
         View view = inflater.inflate(R.layout.fragment_view_switch,container, false);
 
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_view);
@@ -148,6 +151,11 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
             if(aBoolean){
@@ -198,6 +206,15 @@ public class ViewSwitchFragment extends Fragment implements LoaderManager.Loader
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             srl.setRefreshing(false);
+        }
+    }
+
+    private void initAckClient() {
+        if(acknowledgeListener == null) {
+            acknowledgeListener = new AcknowledgeListener(getContext());
+            acknowledgeListener.startAcknowlegementClient();
+        } else {
+            acknowledgeListener.startAcknowlegementClient();
         }
     }
 

@@ -1,15 +1,10 @@
 package com.activity;
 
 import android.Manifest;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,16 +13,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.fragment.MasterSwitchFragment;
 import com.fragment.NewSwitchFragment;
 import com.fragment.ViewSwitchFragment;
-import com.provider.EazyExitContract;
 
-import java.util.ArrayList;
 
 import test.com.eazyexit.EazyExitService;
 import test.com.eazyexit.R;
@@ -74,75 +64,8 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         // Set start-up page inside the viewPager(1 is the index value)
         mViewPager.setCurrentItem(1);
-        // This is a stub function which adds 4 mock nodes.
-        // REMOVE THIS METHOD CALL WHEN TESTING WITH ACTUAL NODES
-        mockUpdate();
 
-    }
-
-    // In order to add nodes we have to save node details in the database so that respective elements can access and modify 
-    // the data as per the need be.
-    
-    // Rather than using direct queries to database, we are using a content provider. This enables features like sharing app
-    // data with other apps, using SyncAdapters, etc. Content provider can be seen as a wrapper for SQLITE database.
-    
-    // For more details please refer Android Developer's Official Documentation on Content Providers
-    
-    // To perform any operation (Read, Write, Delete and Update) we use content-uri (addresses for each table defined in the
-    // content-provider contract).
-    // Each operation request is passed to the content-provider through the content-resolver. Its content resolver's job to 
-    // decide which content provider to use to perform requested operation.
-
-    
-    // For actual method prototype please refer either the provider package of this project or the official documentaion on Android Developers website.
-    private void mockUpdate() {
-
-       
-        getContentResolver().delete(EazyExitContract.NodeEntry.CONTENT_URI, null, null);
-
-        //ContentValues class objects are used to store values which can be processed by content-resolver
-        
-        ContentValues values = new ContentValues();
-        values.put(EazyExitContract.NodeEntry.COLUMN_NAME, "ZZZ");
-        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, "111");
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "OFF");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, "PRIMARY");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, "NEW");
-        values.put(EazyExitContract.NodeEntry.COLUMN_TYPE, "LIGHT");
-
-        getContentResolver().insert(EazyExitContract.NodeEntry.CONTENT_URI, values);
-
-        values.clear();
-        values.put(EazyExitContract.NodeEntry.COLUMN_NAME, "ZZZZ");
-        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, "1111");
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "OFF");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, "PRIMARY");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, "NEW");
-        values.put(EazyExitContract.NodeEntry.COLUMN_TYPE, "LIGHT");
-
-        getContentResolver().insert(EazyExitContract.NodeEntry.CONTENT_URI, values);
-
-        values.clear();
-        values.put(EazyExitContract.NodeEntry.COLUMN_NAME, "yyy");
-        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, "11");
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "OFF");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, "SECONDARY");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, "NEW");
-        values.put(EazyExitContract.NodeEntry.COLUMN_TYPE, "LIGHT");
-
-        getContentResolver().insert(EazyExitContract.NodeEntry.CONTENT_URI, values);
-
-
-        values.clear();
-        values.put(EazyExitContract.NodeEntry.COLUMN_NAME, "yyyy");
-        values.put(EazyExitContract.NodeEntry.COLUMN_SSID, "222");
-        values.put(EazyExitContract.NodeEntry.COLUMN_STATE, "ON");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LEVEL, "VITAL");
-        values.put(EazyExitContract.NodeEntry.COLUMN_LOCATION, "NEW");
-        values.put(EazyExitContract.NodeEntry.COLUMN_TYPE, "LIGHT");
-
-        getContentResolver().insert(EazyExitContract.NodeEntry.CONTENT_URI, values);
-
+        //getContentResolver().delete(EazyExitContract.NodeEntry.CONTENT_URI, null, null);
 
     }
 
@@ -248,4 +171,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 }
